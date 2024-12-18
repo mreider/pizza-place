@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eec-runtime-configuration
+  namespace: dynatrace
+
+data:
+  runtimeConfiguration: |
+    {
+      "booleanMap": {
+        "debugPluginAgentExtendedLogNative": true,
+        "debugPluginAgentFirewallLogNative": true,
+        "debugPluginAgentPluginResolveConflictsNative": true,
+        "debugPluginAgentProtobufLogNative": false,
+        "debugPluginAgentPythonPluginsExtendedLogNative": false,
+        "debugPluginAgentTracemallocDumpsNative": false,
+        "debugPluginAgentUseEngineInFolderNative": true,
+        "debugPluginAgentVerifyEngineZipNative": false,
+        "debugEEC.sender.logfile": true,
+        "debugEEC.otlp.log.ingest.flag": true,
+        "debugEEC.webserver.requests.logfile": true,
+        "debugEEC.webserver.configcalls": true,
+        "debugExtensionDS": true
+      },
+      "stringMap": {},
+      "longMap": {
+        "debugExtensionDSsnmpmaxsnmpdevices": 69,
+        "debugPluginAgentCpuLimit": 10,
+        "debugPluginAgentDevicesLimitNative": 5000,
+        "debugPluginAgentEventsLimitNative": 100,
+        "debugPluginAgentGroupsLimitNative": 500,
+        "debugPluginAgentMeasurementsLimitNative": 100000,
+        "debugPluginAgentMemoryLimit": 400000000,
+        "debugPluginAgentTracemallocDepthNative": 0,
+        "debugPluginAgentTracemallocIntervalNative": 180
+      }
+    }

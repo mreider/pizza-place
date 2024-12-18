@@ -1,0 +1,30 @@
+apiVersion: dynatrace.com/v1beta3
+kind: DynaKube
+metadata:
+  name: dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: https://abl46885.dev.dynatracelabs.com/api
+  tokens: dynakube
+  metadataEnrichment:
+    enabled: false
+  activeGate:
+    capabilities:
+      - routing
+      - kubernetes-monitoring
+      - dynatrace-api
+    tlsSecretName: dynakube-ag-tls   
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1.5Gi
+  extensions: {}
+  templates:
+      extensionExecutionController:
+        customConfig: eec-runtime-configuration
+        imageRef:
+          repository: public.ecr.aws/dynatrace/dynatrace-eec
+          tag: 1.305.71.20241213-072604

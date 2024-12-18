@@ -1,0 +1,46 @@
+name: Build, Push, and Update Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-push-update:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions'  # Prevent infinite loop
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Set Image Tag
+        id: set_vars
+        run: echo "IMAGE_TAG=${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: mreider
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build --no-cache -t mreider/pizza:latest -t mreider/pizza:${IMAGE_TAG} .
+          docker push mreider/pizza:latest
+          docker push mreider/pizza:${IMAGE_TAG}
+
+      - name: Update Image Tag in Deployment Manifest
+        run: |
+          sed -i "s|mreider/pizza:.*|mreider/pizza:${IMAGE_TAG}|g" k8s/deployment.yaml
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update pizza image to run number ${IMAGE_TAG}"
+          file_pattern: "k8s/deployment.yaml"
